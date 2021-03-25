@@ -2,7 +2,7 @@ package lexer;
 
 import java.io.IOException;
 import java.util.Hashtable;
-import symbols.*;
+import symbols.Type;
 
 public class Lexer {
     public static int line = 1;

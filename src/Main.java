@@ -1,5 +1,3 @@
-package main
-
 import java.io.IOException;
 import lexer.Lexer;
 import parser.Parser;
