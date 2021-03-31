@@ -11,7 +11,7 @@ public class Do extends Stmt {
         stmt = null;
     }
 
-    public void init(Expr x, Stmt s) {
+    public void init(Stmt s,Expr x) {
         expr = x;
         stmt = s;
         if (expr.type != Type.Bool) {

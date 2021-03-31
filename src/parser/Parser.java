@@ -127,7 +127,7 @@ public class Parser {
             match('(');
             x = bool();
             match(')');
-            s1 = stmts();
+            s1 = stmt();
             whilenode.init(x, s1);
             Stmt.Enclosing = savedStmt;
             return whilenode;
@@ -142,7 +142,7 @@ public class Parser {
             x = bool();
             match(')');
             match(';');
-            donode.init(x, s1);
+            donode.init(s1, x);
             Stmt.Enclosing = savedStmt;
             return donode;
         case Tag.BREAK:
@@ -243,7 +243,7 @@ public class Parser {
     }
 
     Expr unary() throws IOException {
-        if (look.tag == '=') {
+        if (look.tag == '-') {
             move();
             return new Unary(Word.minus, unary());
         }
@@ -275,8 +275,12 @@ public class Parser {
             return x;
         case Tag.TRUE:
             x = Constant.True;
+            move();
+            return x;
         case Tag.FALSE:
             x = Constant.False;
+            move();
+            return x;
         case Tag.ID:
             var s = look.toString();
             var id = top.get(look);
@@ -306,7 +310,7 @@ public class Parser {
         i = bool();
         match(']');
         type = ((Array) type).of;
-        w = new Constant(type().width);
+        w = new Constant(type.width);
         t1 = new Arith(new Token('*'), i, w);
         loc = t1;
         while (look.tag == '[') {
