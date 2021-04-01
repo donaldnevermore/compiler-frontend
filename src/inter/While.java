@@ -25,6 +25,6 @@ public class While extends Stmt {
         var label = newlabel();
         emitlabel(label);
         stmt.gen(label, b);
-        emit("got L" + b);
+        emit("goto L" + b);
     }
 }
