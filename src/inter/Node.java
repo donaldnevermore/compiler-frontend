@@ -3,11 +3,7 @@ package inter;
 import lexer.Lexer;
 
 public class Node {
-    private int lexline = 0;
-
-    Node() {
-        lexline = Lexer.line;
-    }
+    private final int lexline = Lexer.line;
 
     void error(String s) {
         throw new Error("near line " + lexline + ": " + s);
@@ -26,5 +22,4 @@ public class Node {
     public void emit(String s) {
         System.out.println("\t" + s);
     }
-
 }

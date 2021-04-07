@@ -9,7 +9,7 @@ import symbols.Type;
 import java.io.IOException;
 
 public class Parser {
-    private Lexer lex;
+    private final Lexer lex;
     private Token look;
     Env top = null;
     int used = 0;
@@ -24,7 +24,7 @@ public class Parser {
     }
 
     void error(String s) {
-        throw new Error("near line " + lex.line + ": " + s);
+        throw new Error("near line " + Lexer.line + ": " + s);
     }
 
     void match(int t) throws IOException {
@@ -169,6 +169,7 @@ public class Parser {
             stmt = new Set(id, bool());
         }
         else {
+            // For array
             var x = offset(id);
             match('=');
             stmt = new SetElem(x, bool());
@@ -260,28 +261,33 @@ public class Parser {
     Expr factor() throws IOException {
         Expr x = null;
         switch (look.tag) {
-        case '(':
+        case '(' -> {
             move();
             x = bool();
             match(')');
             return x;
-        case Tag.NUM:
+        }
+        case Tag.NUM -> {
             x = new Constant(look, Type.Int);
             move();
             return x;
-        case Tag.REAL:
+        }
+        case Tag.REAL -> {
             x = new Constant(look, Type.Float);
             move();
             return x;
-        case Tag.TRUE:
+        }
+        case Tag.TRUE -> {
             x = Constant.True;
             move();
             return x;
-        case Tag.FALSE:
+        }
+        case Tag.FALSE -> {
             x = Constant.False;
             move();
             return x;
-        case Tag.ID:
+        }
+        case Tag.ID -> {
             var s = look.toString();
             var id = top.get(look);
             if (id == null) {
@@ -294,9 +300,11 @@ public class Parser {
             else {
                 return offset(id);
             }
-        default:
+        }
+        default -> {
             error("syntax error");
             return x;
+        }
         }
     }
 

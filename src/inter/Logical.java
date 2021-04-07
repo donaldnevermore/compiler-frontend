@@ -30,10 +30,10 @@ public class Logical extends Expr {
         var a = newlabel();
         var temp = new Temp(type);
         jumping(0, f);
-        emit(temp.toString() + " = true");
+        emit(temp + " = true");
         emit("goto L" + a);
         emitlabel(f);
-        emit(temp.toString() + " = false");
+        emit(temp + " = false");
         emitlabel(a);
         return temp;
     }

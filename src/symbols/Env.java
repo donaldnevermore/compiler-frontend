@@ -1,11 +1,12 @@
 package symbols;
 
 import java.util.Hashtable;
+
 import lexer.Token;
 import inter.Id;
 
 public class Env {
-    private Hashtable<Token, Id> table;
+    private final Hashtable<Token, Id> table;
     protected Env prev;
 
     public Env(Env n) {

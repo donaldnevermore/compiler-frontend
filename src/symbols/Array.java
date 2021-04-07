@@ -1,10 +1,10 @@
 package symbols;
 
-import lexer.*;
+import lexer.Tag;
 
 public class Array extends Type {
     public Type of;
-    public int size = 1;
+    public int size;
 
     public Array(int sz, Type p) {
         super("[]", Tag.INDEX, sz * p.width);

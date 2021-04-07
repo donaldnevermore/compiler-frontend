@@ -11,7 +11,7 @@ public class Op extends Expr {
     public Expr reduce() {
         var x = gen();
         var t = new Temp(type);
-        emit(t.toString() + " = " + x.toString());
+        emit(t + " = " + x.toString());
         return t;
     }
 }

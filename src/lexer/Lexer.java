@@ -2,12 +2,13 @@ package lexer;
 
 import java.io.IOException;
 import java.util.Hashtable;
+
 import symbols.Type;
 
 public class Lexer {
     public static int line = 1;
     private char peek = ' ';
-    private Hashtable<String, Word> words = new Hashtable<>();
+    private final Hashtable<String, Word> words = new Hashtable<>();
 
     void reserve(Word w) {
         words.put(w.lexeme, w);
@@ -42,7 +43,7 @@ public class Lexer {
     }
 
     public Token scan() throws IOException {
-        for (;; readch()) {
+        for (; ; readch()) {
             if (peek == ' ' || peek == '\t') {
                 continue;
             }
@@ -110,22 +111,22 @@ public class Lexer {
                 return new Num(v);
             }
 
-            float x = v;
-            float d = 10;
+            double x = v;
+            double d = 10;
 
-            for (;;) {
+            for (; ; ) {
                 readch();
                 if (!Character.isDigit(peek)) {
                     break;
                 }
-                x = x + Character.digit(peek, 10) / 10;
+                x = x + Character.digit(peek, 10) / 10.0;
                 d = d * 10;
             }
 
             return new Real(x);
         }
         if (Character.isLetter(peek)) {
-            var b = new StringBuffer();
+            var b = new StringBuilder();
             do {
                 b.append(peek);
                 readch();
