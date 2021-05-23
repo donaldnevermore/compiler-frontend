@@ -3,6 +3,7 @@
 .idea/
 .vs/
 
+bin/
+out/
 .gradle/
 *.iml
-out/
