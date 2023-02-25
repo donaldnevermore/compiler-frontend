@@ -30,9 +30,8 @@ public class Parser {
     void match(int t) throws IOException {
         if (look.tag == t) {
             move();
-        }
-        else {
-            error("syntax error");
+        } else {
+            error("look: " + look.toString());
         }
     }
 
@@ -73,8 +72,7 @@ public class Parser {
         match(Tag.BASIC);
         if (look.tag != '[') {
             return p;
-        }
-        else {
+        } else {
             return dims(p);
         }
     }
@@ -93,8 +91,7 @@ public class Parser {
     Stmt stmts() throws IOException {
         if (look.tag == '}') {
             return Stmt.Null;
-        }
-        else {
+        } else {
             return new Seq(stmt(), stmts());
         }
     }
@@ -104,55 +101,55 @@ public class Parser {
         Stmt s, s1, s2;
         Stmt savedStmt;
         switch (look.tag) {
-        case ';':
-            move();
-            return Stmt.Null;
-        case Tag.IF:
-            match(Tag.IF);
-            match('(');
-            x = bool();
-            match(')');
-            s1 = stmt();
-            if (look.tag != Tag.ELSE) {
-                return new If(x, s1);
-            }
-            match(Tag.ELSE);
-            s2 = stmt();
-            return new Else(x, s1, s2);
-        case Tag.WHILE:
-            var whilenode = new While();
-            savedStmt = Stmt.Enclosing;
-            Stmt.Enclosing = whilenode;
-            match(Tag.WHILE);
-            match('(');
-            x = bool();
-            match(')');
-            s1 = stmt();
-            whilenode.init(x, s1);
-            Stmt.Enclosing = savedStmt;
-            return whilenode;
-        case Tag.DO:
-            var donode = new Do();
-            savedStmt = Stmt.Enclosing;
-            Stmt.Enclosing = donode;
-            match(Tag.DO);
-            s1 = stmt();
-            match(Tag.WHILE);
-            match('(');
-            x = bool();
-            match(')');
-            match(';');
-            donode.init(s1, x);
-            Stmt.Enclosing = savedStmt;
-            return donode;
-        case Tag.BREAK:
-            match(Tag.BREAK);
-            match(';');
-            return new Break();
-        case '{':
-            return block();
-        default:
-            return assign();
+            case ';':
+                move();
+                return Stmt.Null;
+            case Tag.IF:
+                match(Tag.IF);
+                match('(');
+                x = bool();
+                match(')');
+                s1 = stmt();
+                if (look.tag != Tag.ELSE) {
+                    return new If(x, s1);
+                }
+                match(Tag.ELSE);
+                s2 = stmt();
+                return new Else(x, s1, s2);
+            case Tag.WHILE:
+                var whilenode = new While();
+                savedStmt = Stmt.Enclosing;
+                Stmt.Enclosing = whilenode;
+                match(Tag.WHILE);
+                match('(');
+                x = bool();
+                match(')');
+                s1 = stmt();
+                whilenode.init(x, s1);
+                Stmt.Enclosing = savedStmt;
+                return whilenode;
+            case Tag.DO:
+                var donode = new Do();
+                savedStmt = Stmt.Enclosing;
+                Stmt.Enclosing = donode;
+                match(Tag.DO);
+                s1 = stmt();
+                match(Tag.WHILE);
+                match('(');
+                x = bool();
+                match(')');
+                match(';');
+                donode.init(s1, x);
+                Stmt.Enclosing = savedStmt;
+                return donode;
+            case Tag.BREAK:
+                match(Tag.BREAK);
+                match(';');
+                return new Break();
+            case '{':
+                return block();
+            default:
+                return assign();
         }
     }
 
@@ -167,8 +164,7 @@ public class Parser {
         if (look.tag == '=') {
             move();
             stmt = new Set(id, bool());
-        }
-        else {
+        } else {
             // For array
             var x = offset(id);
             match('=');
@@ -211,15 +207,15 @@ public class Parser {
     Expr rel() throws IOException {
         var x = expr();
         switch (look.tag) {
-        case '<':
-        case Tag.LE:
-        case Tag.GE:
-        case '>':
-            var tok = look;
-            move();
-            return new Rel(tok, x, expr());
-        default:
-            return x;
+            case '<':
+            case Tag.LE:
+            case Tag.GE:
+            case '>':
+                var tok = look;
+                move();
+                return new Rel(tok, x, expr());
+            default:
+                return x;
         }
     }
 
@@ -247,13 +243,11 @@ public class Parser {
         if (look.tag == '-') {
             move();
             return new Unary(Word.minus, unary());
-        }
-        else if (look.tag == '!') {
+        } else if (look.tag == '!') {
             var tok = look;
             move();
             return new Not(tok, unary());
-        }
-        else {
+        } else {
             return factor();
         }
     }
@@ -261,50 +255,49 @@ public class Parser {
     Expr factor() throws IOException {
         Expr x = null;
         switch (look.tag) {
-        case '(' -> {
-            move();
-            x = bool();
-            match(')');
-            return x;
-        }
-        case Tag.NUM -> {
-            x = new Constant(look, Type.Int);
-            move();
-            return x;
-        }
-        case Tag.REAL -> {
-            x = new Constant(look, Type.Float);
-            move();
-            return x;
-        }
-        case Tag.TRUE -> {
-            x = Constant.True;
-            move();
-            return x;
-        }
-        case Tag.FALSE -> {
-            x = Constant.False;
-            move();
-            return x;
-        }
-        case Tag.ID -> {
-            var s = look.toString();
-            var id = top.get(look);
-            if (id == null) {
-                error(look.toString() + " undeclared");
+            case '(' -> {
+                move();
+                x = bool();
+                match(')');
+                return x;
             }
-            move();
-            if (look.tag != '[') {
-                return id;
+            case Tag.NUM -> {
+                x = new Constant(look, Type.Int);
+                move();
+                return x;
             }
-            else {
-                return offset(id);
+            case Tag.REAL -> {
+                x = new Constant(look, Type.Float);
+                move();
+                return x;
             }
-        }
-        default -> {
-            error("syntax error");
-            return x;
-        }
+            case Tag.TRUE -> {
+                x = Constant.True;
+                move();
+                return x;
+            }
+            case Tag.FALSE -> {
+                x = Constant.False;
+                move();
+                return x;
+            }
+            case Tag.ID -> {
+                // var s = look.toString();
+                var id = top.get(look);
+                if (id == null) {
+                    error(look.toString() + " undeclared");
+                }
+                move();
+                if (look.tag != '[') {
+                    return id;
+                } else {
+                    return offset(id);
+                }
+            }
+            default -> {
+                error("syntax error");
+                return x;
+            }
         }
     }
 

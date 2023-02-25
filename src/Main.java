@@ -9,5 +9,6 @@ public class Main {
         var parse = new Parser(lex);
         parse.program();
         System.out.write('\n');
+        System.out.println("OK.");
     }
 }

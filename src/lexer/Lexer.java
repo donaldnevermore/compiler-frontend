@@ -23,6 +23,7 @@ public class Lexer {
 
         reserve(Word.True);
         reserve(Word.False);
+
         reserve(Type.Int);
         reserve(Type.Char);
         reserve(Type.Bool);
@@ -43,61 +44,53 @@ public class Lexer {
     }
 
     public Token scan() throws IOException {
-        for (; ; readch()) {
-            if (peek == ' ' || peek == '\t') {
+        for (;; readch()) {
+            if (peek == ' ' || peek == '\t' || peek == '\r') {
                 continue;
-            }
-            else if (peek == '\n') {
+            } else if (peek == '\n') {
                 line++;
-            }
-            else {
+            } else {
                 break;
             }
         }
 
         switch (peek) {
-        case '&':
-            if (readch('&')) {
-                return Word.and;
-            }
-            else {
-                return new Token('&');
-            }
-        case '|':
-            if (readch('|')) {
-                return Word.or;
-            }
-            else {
-                return new Token('|');
-            }
-        case '=':
-            if (readch('=')) {
-                return Word.eq;
-            }
-            else {
-                return new Token('=');
-            }
-        case '!':
-            if (readch('=')) {
-                return Word.ne;
-            }
-            else {
-                return new Token('!');
-            }
-        case '<':
-            if (readch('=')) {
-                return Word.le;
-            }
-            else {
-                return new Token('<');
-            }
-        case '>':
-            if (readch('=')) {
-                return Word.ge;
-            }
-            else {
-                return new Token('>');
-            }
+            case '&':
+                if (readch('&')) {
+                    return Word.and;
+                } else {
+                    return new Token('&');
+                }
+            case '|':
+                if (readch('|')) {
+                    return Word.or;
+                } else {
+                    return new Token('|');
+                }
+            case '=':
+                if (readch('=')) {
+                    return Word.eq;
+                } else {
+                    return new Token('=');
+                }
+            case '!':
+                if (readch('=')) {
+                    return Word.ne;
+                } else {
+                    return new Token('!');
+                }
+            case '<':
+                if (readch('=')) {
+                    return Word.le;
+                } else {
+                    return new Token('<');
+                }
+            case '>':
+                if (readch('=')) {
+                    return Word.ge;
+                } else {
+                    return new Token('>');
+                }
         }
 
         if (Character.isDigit(peek)) {
@@ -111,15 +104,15 @@ public class Lexer {
                 return new Num(v);
             }
 
-            double x = v;
-            double d = 10;
+            float x = v;
+            float d = 10;
 
-            for (; ; ) {
+            for (;;) {
                 readch();
                 if (!Character.isDigit(peek)) {
                     break;
                 }
-                x = x + Character.digit(peek, 10) / 10.0;
+                x = x + Character.digit(peek, 10) / d;
                 d = d * 10;
             }
 
