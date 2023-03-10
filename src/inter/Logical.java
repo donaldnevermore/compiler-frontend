@@ -19,8 +19,7 @@ public class Logical extends Expr {
     public Type check(Type p1, Type p2) {
         if (p1 == Type.Bool && p2 == Type.Bool) {
             return Type.Bool;
-        }
-        else {
+        } else {
             return null;
         }
     }
