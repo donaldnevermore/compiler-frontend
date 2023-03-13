@@ -282,10 +282,10 @@ public class Parser {
                 return x;
             }
             case Tag.ID -> {
-                // var s = look.toString();
+                var s = look.toString();
                 var id = top.get(look);
                 if (id == null) {
-                    error(look.toString() + " undeclared");
+                    error(s + " undeclared");
                 }
                 move();
                 if (look.tag != '[') {

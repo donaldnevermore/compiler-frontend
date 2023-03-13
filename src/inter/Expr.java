@@ -28,11 +28,9 @@ public class Expr extends Node {
         if (t != 0 && f != 0) {
             emit("if " + test + " goto L" + t);
             emit("goto L" + f);
-        }
-        else if (t != 0) {
+        } else if (t != 0) {
             emit("if " + test + " goto L" + t);
-        }
-        else if (f != 0) {
+        } else if (f != 0) {
             emit("iffalse " + test + " goto L" + f);
         }
     }
